@@ -1,0 +1,48 @@
+.wheat_0 {
+  background-image: url(./src/assets/wheat_stage0.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_1 {
+  background-image: url(./src/assets/wheat_stage1.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_2 {
+  background-image: url(./src/assets/wheat_stage2.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_3 {
+  background-image: url(./src/assets/wheat_stage3.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_4 {
+  background-image: url(./src/assets/wheat_stage4.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_5 {
+  background-image: url(./src/assets/wheat_stage5.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_6 {
+  background-image: url(.src/assets/wheat_stage6.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.wheat_7 {
+  background-image: url(./src/assets/wheat_stage7.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}

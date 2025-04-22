@@ -1,94 +1,115 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-type Props = {
+import "./carrot/carrot.css";
+import "./wheat/wheat.css";
+import { Dirt } from "./dirt/dirt";
+import { WheatItem } from "./wheat/wheat.tsx";
+import { CarrotItem } from "./carrot/carrot.tsx";
+
+export type Props = {
   stage: number;
   onClick: () => void;
 };
-
-function WheatHeight(props: Props) {
-  if (props.stage == 0)
-    return <div className="wheat_0" onClick={props.onClick}></div>;
-  else if (props.stage == 1)
-    return <div className="wheat_1" onClick={props.onClick}></div>;
-  else if (props.stage == 2)
-    return <div className="wheat_2" onClick={props.onClick}></div>;
-  else if (props.stage == 3)
-    return <div className="wheat_3" onClick={props.onClick}></div>;
-  else if (props.stage == 4)
-    return <div className="wheat_4" onClick={props.onClick}></div>;
-  else if (props.stage == 5)
-    return <div className="wheat_5" onClick={props.onClick}></div>;
-  else if (props.stage == 6)
-    return <div className="wheat_6" onClick={props.onClick}></div>;
-  else if (props.stage == 7)
-    return <div className="wheat_7" onClick={props.onClick}></div>;
-}
-
-type WheatItemProps = {
-  onHarvest: () => void;
-  growthSpeed?: number;
-};
-
-export const WheatItem = ({
-  onHarvest,
-  growthSpeed = 1000,
-}: WheatItemProps) => {
-  const [growthStage, setGrowthStage] = useState(0);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setGrowthStage((prev) => (prev < 7 ? prev + 1 : prev));
-    }, growthSpeed);
-    return () => clearInterval(timer);
-  }, [growthSpeed]);
-  const handleClick = () => {
-    if (growthStage >= 7) {
-      setGrowthStage(0);
-      onHarvest();
-    }
-  };
-
-  return <WheatHeight stage={growthStage} onClick={handleClick} />;
+export type FieldItem = {
+  id: string;
+  plantType: "empty" | "wheat" | "carrot";
+  growthStage: number;
 };
 
 export const App = () => {
-  const [totalHarvest, setTotalHarvest] = useState(0);
-  const handleWheatHarvest = () => {
-    setTotalHarvest((prev) => prev + 1);
+  const [fields, setFields] = useState<FieldItem[]>(() =>
+    Array(5)
+      .fill(null)
+      .map((_, i) => ({
+        id: `field-${i}`,
+        plantType: "empty",
+        growthStage: 0,
+      }))
+  );
+
+  const [selectedPlant, setSelectedPlant] = useState<"wheat" | "carrot">(
+    "wheat"
+  );
+  const [harvest, setHarvest] = useState({ wheat: 0, carrot: 0 });
+
+  // Посадка растения
+  const handlePlant = (fieldId: string) => {
+    setFields(
+      fields.map((field) =>
+        field.id === fieldId && field.plantType === "empty"
+          ? { ...field, plantType: selectedPlant, growthStage: 0 }
+          : field
+      )
+    );
   };
-  const renderWheatItems = () => {
-    return [...Array(5)].map((_, index) => (
-      <WheatItem
-        key={index}
-        onHarvest={handleWheatHarvest}
-        growthSpeed={Math.random() * 1000 + 500}
-      />
-    ));
+
+  // Сбор урожая
+  const handleHarvest = (fieldId: string, plantType: "wheat" | "carrot") => {
+    setFields(
+      fields.map((field) =>
+        field.id === fieldId
+          ? { ...field, plantType: "empty", growthStage: 0 }
+          : field
+      )
+    );
+    setHarvest((prev) => ({ ...prev, [plantType]: prev[plantType] + 1 }));
   };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        minHeight: "100vh",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <h2 style={{ marginBottom: "30px" }}>Собрано всего: {totalHarvest} 🌾</h2>
+    <div style={{ padding: "20px" }}>
+      <div style={{ marginBottom: "20px" }}>
+        <button
+          onClick={() => setSelectedPlant("wheat")}
+          style={{
+            fontWeight: selectedPlant === "wheat" ? "bold" : "normal",
+          }}
+        >
+          Выбрать пшеницу 🌾
+        </button>
+        <button
+          onClick={() => setSelectedPlant("carrot")}
+          style={{
+            marginLeft: "10px",
+            fontWeight: selectedPlant === "carrot" ? "bold" : "normal",
+          }}
+        >
+          Выбрать морковь 🥕
+        </button>
+      </div>
+
+      <div>
+        Собрано: 🌾 {harvest.wheat} | 🥕 {harvest.carrot}
+      </div>
+
       <div
         style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
           gap: "20px",
-          maxWidth: "800px",
+          marginTop: "30px",
         }}
       >
-        {renderWheatItems()}
+        {fields.map((field) => (
+          <div key={field.id} style={{ textAlign: "center" }}>
+            {field.plantType === "empty" ? (
+              <Dirt onClick={() => handlePlant(field.id)} />
+            ) : field.plantType === "wheat" ? (
+              <WheatItem
+                growthStage={field.growthStage}
+                onHarvest={() => handleHarvest(field.id, "wheat")}
+                growthSpeed={1000}
+              />
+            ) : (
+              <CarrotItem
+                growthStage={field.growthStage}
+                onHarvest={() => handleHarvest(field.id, "carrot")}
+                growthSpeed={800}
+              />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
-
 export default App;

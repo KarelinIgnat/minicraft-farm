@@ -1,0 +1,26 @@
+.carrot_0 {
+  background-image: url(./src/assets/Carrots_Age_0.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+.carrot_1 {
+  background-image: url(.src/assets/Carrots_Age_1.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+
+.carrot_2 {
+  background-image: url(./src/assets/Carrots_Age_2.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
+
+.carrot_3 {
+  background-image: url(./src/assets/Carrots_Age_3.png);
+  background-size: cover;
+  height: 100px;
+  width: 100px;
+}
